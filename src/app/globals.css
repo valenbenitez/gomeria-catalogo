@@ -3,8 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-primary: #1e40af;     /* Azul oscuro para elementos principales */
+  --color-secondary: #3b82f6;   /* Azul más claro para hover y elementos secundarios */
+  --color-background: #f8fafc;  /* Gris muy claro para el fondo */
+  --color-surface: #ffffff;     /* Blanco para las tarjetas */
+  --color-text: #1e293b;       /* Azul muy oscuro para textos */
 }
 
 @media (prefers-color-scheme: dark) {
