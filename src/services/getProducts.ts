@@ -11,6 +11,8 @@ interface Response {
   id: string | number
   categoria: string
   descripcion: string
+  marca: string
+  vehiculo: string
 }
 
 export const getProducts = async (): Promise<Response[]> => {
