@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { getProducts } from "@/services/getProducts";
 import { ProductCard } from "@/components/ProductCard";
 import { CategoryFilter } from "@/components/CategoryFilter";
+import { LoadingScreen } from "@/components/LoadingScreen";
 
 export default function Home() {
   const [products, setProducts] = useState<any>([]);
@@ -12,20 +13,26 @@ export default function Home() {
   const [categories, setCategories] = useState<string[]>([]);
   const [brands, setBrands] = useState<string[]>([]);
   const [vehicles, setVehicles] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const fetchedProducts = await getProducts();
-      setProducts(fetchedProducts);
-      
-      // Extraer valores únicos
-      const uniqueCategories = [...new Set(fetchedProducts.map(product => product.categoria))];
-      const uniqueBrands = [...new Set(fetchedProducts.map(product => product.marca))];
-      const uniqueVehicles = [...new Set(fetchedProducts.map(product => product.vehiculo))];
-      
-      setCategories(uniqueCategories);
-      setBrands(uniqueBrands);
-      setVehicles(uniqueVehicles);
+      try {
+        const fetchedProducts = await getProducts();
+        setProducts(fetchedProducts);
+        
+        const uniqueCategories = [...new Set(fetchedProducts.map(product => product.categoria))];
+        const uniqueBrands = [...new Set(fetchedProducts.map(product => product.marca))];
+        const uniqueVehicles = [...new Set(fetchedProducts.map(product => product.vehiculo))];
+        
+        setCategories(uniqueCategories);
+        setBrands(uniqueBrands);
+        setVehicles(uniqueVehicles);
+      } catch (error) {
+        console.error('Error al cargar productos:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchProducts();
@@ -39,10 +46,14 @@ export default function Home() {
     return matchCategory && matchBrand && matchVehicle;
   });
 
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <div className="min-h-screen bg-white p-4 sm:p-6 lg:p-8">
       <main className="max-w-7xl mx-auto">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-black">Catálogo de Neumáticos</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-black">Catálogo</h1>
         
         <CategoryFilter
           categories={categories}
