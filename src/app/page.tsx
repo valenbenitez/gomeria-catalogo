@@ -2,32 +2,20 @@
 import { useState, useEffect } from 'react';
 import { getProducts } from "@/services/getProducts";
 import { ProductCard } from "@/components/ProductCard";
-import { CategoryFilter } from "@/components/CategoryFilter";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import Link from 'next/link';
+import { SliderComponent } from '@/components/Slider';
 
 export default function Home() {
-  const [products, setProducts] = useState<any>([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedBrand, setSelectedBrand] = useState('all');
-  const [selectedVehicle, setSelectedVehicle] = useState('all');
-  const [categories, setCategories] = useState<string[]>([]);
-  const [brands, setBrands] = useState<string[]>([]);
-  const [vehicles, setVehicles] = useState<string[]>([]);
+  const [featuredProducts, setFeaturedProducts] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const fetchedProducts = await getProducts();
-        setProducts(fetchedProducts);
-        
-        const uniqueCategories = [...new Set(fetchedProducts.map(product => product.categoria))];
-        const uniqueBrands = [...new Set(fetchedProducts.map(product => product.marca))];
-        const uniqueVehicles = [...new Set(fetchedProducts.map(product => product.vehiculo))];
-        
-        setCategories(uniqueCategories);
-        setBrands(uniqueBrands);
-        setVehicles(uniqueVehicles);
+        // Seleccionar solo 3 productos destacados
+        setFeaturedProducts(fetchedProducts.slice(0, 3));
       } catch (error) {
         console.error('Error al cargar productos:', error);
       } finally {
@@ -38,44 +26,42 @@ export default function Home() {
     fetchProducts();
   }, []);
 
-  const filteredProducts = products.filter((product: any) => {
-    const matchCategory = selectedCategory === 'all' || product.categoria === selectedCategory;
-    const matchBrand = selectedBrand === 'all' || product.marca === selectedBrand;
-    const matchVehicle = selectedVehicle === 'all' || product.vehiculo === selectedVehicle;
-    
-    return matchCategory && matchBrand && matchVehicle;
-  });
-
   if (isLoading) {
     return <LoadingScreen />;
   }
 
   return (
-    <div className="min-h-screen bg-white p-4 sm:p-6 lg:p-8">
-      <main className="max-w-7xl mx-auto">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-black">Catálogo</h1>
-        
-        <CategoryFilter
-          categories={categories}
-          brands={brands}
-          vehicles={vehicles}
-          selectedCategory={selectedCategory}
-          selectedBrand={selectedBrand}
-          selectedVehicle={selectedVehicle}
-          onCategoryChange={setSelectedCategory}
-          onBrandChange={setSelectedBrand}
-          onVehicleChange={setSelectedVehicle}
-        />
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-          {filteredProducts.map((product: any) => (
-            <ProductCard
-              key={product.id}
-              {...product}
-            />
-          ))}
+    <div className="min-h-screen flex flex-col">
+      <section style={{ height: '100svh' }} className="bg-blue-50 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4 text-start">
+            Elige los neumáticos correctos y siente la diferencia.
+          </h2>
+          <p className="text-xl text-gray-600 mb-8 text-start">
+            Descubre nuestra selección de productos de alta calidad
+          </p>
+            <SliderComponent />
+          <Link 
+            href="/productos" 
+            className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Ver catálogo completo
+          </Link>
         </div>
-      </main>
+      </section>
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-2xl font-bold text-center mb-12">Productos Destacados</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featuredProducts.map((product: any) => (
+              <ProductCard
+                key={product.id}
+                {...product}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

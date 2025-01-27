@@ -23,7 +23,7 @@ export function CategoryFilter({
   onBrandChange,
   onVehicleChange,
 }: FilterProps) {
-  const [isFiltersVisible, setIsFiltersVisible] = useState(true);
+  const [isFiltersVisible, setIsFiltersVisible] = useState(false);
 
   return (
     <div className="mb-8 text-black">

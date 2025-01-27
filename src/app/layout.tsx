@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Montserrat } from "next/font/google";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,6 +47,36 @@ export default function RootLayout({
         <Header />
         {children}
         <WhatsAppButton />
+        <footer className="bg-blue-600 text-white mt-auto">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Contacto</h3>
+                <p>Email: benitezvalentin046@gmail.com</p>
+                <p>Teléfono: (00) 000-000</p>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Enlaces</h3>
+                <ul className="space-y-2">
+                  <li><Link href="/productos" className="hover:text-blue-300">Productos</Link></li>
+                  <li><Link href="/sobre-nosotros" className="hover:text-blue-300">Sobre Nosotros</Link></li>
+                  <li><Link href="/contacto" className="hover:text-blue-300">Contacto</Link></li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Síguenos</h3>
+                <div className="space-x-4">
+                  <a href="#" className="hover:text-blue-300">Facebook</a>
+                  <a href="#" className="hover:text-blue-300">Twitter</a>
+                  <a href="#" className="hover:text-blue-300">Instagram</a>
+                </div>
+              </div>
+            </div>
+            <div className="border-t border-gray-700 mt-8 pt-8 text-center">
+              <p>&copy; 2024 Mi Tienda. Todos los derechos reservados.</p>
+            </div>
+          </div>
+        </footer>
       </body>
     </html>
   );
